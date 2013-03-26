@@ -135,7 +135,10 @@ Additional recommendations:
 <a name="comments"/>
 ## Comments
 
-If modifying code that is described by an existing comment, update the comment such that it accurately reflects the new code. (Ideally, improve the code to obviate the need for the comment, and delete the comment entirely.)
+Other than the documentation comment block, code should be transparent enough to self-document and not require additional explaination.
+
+If a method or function is complex enough to warrant a comment then the method or function should be refactored. In exceptional circumstances 
+they maybe neccessary.
 
 The first word of the comment should be capitalized, unless the first word is an identifier that begins with a lower-case letter.
 
@@ -305,14 +308,7 @@ $('#selektor').addClass 'klass'
 foo(4).bar 8
 ```
 
-In cases where method calls are being chained, some adopters of this style prefer to use function grouping for the initial call only:
-
-```coffeescript
-($ '#selektor').addClass('klass').hide() # Initial call only
-(($ '#selektor').addClass 'klass').hide() # All calls
-```
-
-The function grouping style is not recommended. However, **if the function grouping style is adopted for a particular project, be consistent with its usage.**
+The function grouping style is **not** to be used as it makes code hard to scan.
 
 <a name="strings"/>
 ## Strings
@@ -364,22 +360,17 @@ Multi-line if/else clauses should use indentation:
 <a name="looping_and_comprehensions"/>
 ## Looping and Comprehensions
 
-Take advantage of comprehensions whenever possible:
+Comprehensions should only me used if they add to the readability of the 
+code. If using comprehensions then make sure you use descriptive varaible names:
 
 ```coffeescript
-  # Yes
-  result = (item.name for item in array)
-
-  # No
-  results = []
-  for item in array
-    results.push item.name
+  locationNames = (location.name for location in locations)
 ```
 
 To filter:
 
 ```coffeescript
-result = (item for item in array when item.name is "test")
+locationNames = (location.name for location in locations when location.name isnt "my house")
 ```
 
 To iterate over the keys and values of objects:
@@ -427,7 +418,7 @@ If multiple lines are required by the description, indent subsequent lines with 
 Annotation types:
 
 - `TODO`: describe missing functionality that should be added at a later date
-- `FIXME`: describe broken code that must be fixed
+- `FIXME`: describe broken code that must be fixed. When a FIXME is created it should also be added to github issues.
 - `OPTIMIZE`: describe code that is inefficient and may become a bottleneck
 - `HACK`: describe the use of a questionable (or ingenious) coding practice
 - `REVIEW`: describe code that should be reviewed to confirm implementation
@@ -441,7 +432,9 @@ If a custom annotation is required, the annotation should be documented in the p
 
 `or` is preferred over `||`.
 
-`is` is preferred over `==`.
+`is` is preferred over `===`.
+
+`isnt` is preferred over `!==`.
 
 `not` is preferred over `!`.
 
@@ -450,13 +443,6 @@ If a custom annotation is required, the annotation should be documented in the p
 ```coffeescript
 temp or= {} # Yes
 temp = temp || {} # No
-```
-
-Prefer shorthand notation (`::`) for accessing an object's prototype:
-
-```coffeescript
-Array::slice # Yes
-Array.prototype.slice # No
 ```
 
 Prefer `@property` over `this.property`.
@@ -473,7 +459,7 @@ return this # Yes
 return @ # No
 ```
 
-Avoid `return` where not required, unless the explicit return increases clarity.
+Avoid `return` where not required.
 
 Use splats (`...`) when working with functions that accept variable numbers of arguments:
 
